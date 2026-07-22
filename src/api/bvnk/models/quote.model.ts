@@ -1,0 +1,85 @@
+/**
+ * Quote lifecycle states.
+ * Source: BVNK API docs (https://docs.bvnk.com/reference/quotecreate) — success flow is
+ * PENDING → (accept) → PAYMENT_OUT_PROCESSED; failure states are documented there too.
+ * ACCEPTED/EXPIRED are simulator-observed intermediates.
+ */
+export const QUOTE_STATUS = {
+  ESTIMATE: 'ESTIMATE',
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  PAYMENT_OUT_PROCESSED: 'PAYMENT_OUT_PROCESSED',
+  PAYMENT_IN_FAILED: 'PAYMENT_IN_FAILED',
+  CONVERSION_FAILED: 'CONVERSION_FAILED',
+  PAYMENT_OUT_FAILED: 'PAYMENT_OUT_FAILED',
+  EXPIRED: 'EXPIRED',
+} as const
+
+/** Payment progress states. Source: BVNK API docs (success flow + FAILED); PROCESSING is simulator-observed. */
+export const PAYMENT_STATUS = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED',
+} as const
+
+/** Body of `POST /api/v1/quote`. */
+export type QuoteRequest = {
+  readonly from: string
+  readonly to: string
+  readonly fromWallet: number
+  readonly toWallet: number
+  readonly amountIn?: number | string | null
+  readonly amountOut?: number | string | null
+  readonly useMaximum: boolean
+  readonly useMinimum: boolean
+  readonly reference: string
+  readonly payInMethod: string
+  readonly payOutMethod: string
+}
+
+/** Fee breakdown embedded in a quote. Percentages and values are decimal strings. */
+export type QuoteFees = {
+  readonly percentage: { readonly service: string; readonly processing: string }
+  readonly value: { readonly service: string; readonly processing: string }
+}
+
+/**
+ * Quote as returned by the quote endpoints.
+ *
+ * Per the OpenAPI contract: monetary values are decimal strings; dates are unix timestamps
+ * in seconds. Per the task spec: the service fee is 0.01% and quotes expire 20s after creation.
+ *
+ * ASSUMPTION — researched, not specified anywhere: neither the task PDF, the simulator's
+ * OpenAPI spec, nor BVNK's public API reference (docs.bvnk.com, incl. its OpenAPI export)
+ * defines HOW the 0.01% fee is applied. We assume it is charged in the FROM currency on
+ * `amountIn`, i.e. `amountOut = (amountIn − fee) × price` — corroborated (not proven) by the
+ * official schema's `amountInGross`/`amountInNet` field pair. Tests assert this model; if BVNK
+ * intends a different application (e.g. fee on the output leg), the assertions localize the
+ * difference immediately.
+ */
+export type Quote = {
+  readonly id: number
+  readonly uuid: string
+  readonly from: string
+  readonly to: string
+  readonly amountIn: string
+  readonly amountDue: string
+  readonly amountOut: string
+  readonly price: string
+  readonly netPrice: string
+  readonly grossPrice: string
+  readonly fee: string
+  readonly processingFee: string
+  readonly fees: QuoteFees
+  readonly type: string
+  readonly quoteStatus: string
+  readonly paymentStatus: string
+  readonly acceptanceExpiryDate: number
+  readonly acceptanceDate: number | null
+  readonly paymentExpiryDate: number
+  readonly paymentReceiptDate: number | null
+  readonly reference?: string
+  readonly dateCreated: number
+  readonly lastUpdated: number
+}

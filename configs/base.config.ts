@@ -2,7 +2,7 @@ import { defineConfig } from '@playwright/test'
 
 export const baseConfig = defineConfig({
   testDir: '../tests',
-  outputDir: './out/playwright-results',
+  outputDir: '../out/playwright-results',
   reporter: [
     ['list'],
     [

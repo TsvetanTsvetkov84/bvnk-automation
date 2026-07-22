@@ -5,12 +5,12 @@ node_modules/
 .env
 .env.*
 
-# Test output
-out/
-test-results/
-playwright-report/
-allure-results/
-allure-report/
+# Test output (anchored to repo root — core/reporting/test-results/ is source code)
+/out/
+/test-results/
+/playwright-report/
+/allure-results/
+/allure-report/
 
 # IDE / OS
 .idea/
