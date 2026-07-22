@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Environment / secrets
+.env
+.env.*
+
+# Test output
+out/
+test-results/
+playwright-report/
+allure-results/
+allure-report/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+
+# Local assessment materials (not part of the deliverable)
+*.pdf
+
+# Claude Code local settings
+.claude/

@@ -1,0 +1,55 @@
+{
+  "name": "bvnk-api-automation",
+  "type": "module",
+  "version": "1.0.0",
+  "packageManager": "yarn@1.22.22",
+  "engines": {
+    "node": ">=22"
+  },
+  "description": "BVNK QA Engineering Task — API test automation for the BVNK customer API simulator",
+  "scripts": {
+    "check:filenames": "tsx scripts/cli/validate-names.ts",
+    "typecheck": "tsc --noEmit",
+    "lint:check": "eslint . --ext .ts,.tsx,.js",
+    "lint:fix": "eslint . --ext .ts,.tsx,.js --fix",
+    "prettier:check": "prettier --check .",
+    "prettier:fix": "prettier --write .",
+    "clearAllureResults": "rimraf ./out/allure-results",
+    "test:run": "yarn clearAllureResults && tsx scripts/cli/test.ts",
+    "test:api": "yarn test:run api",
+    "allure:open": "ALLURE_RESULTS_DIR=out/allure-results node core/reporting/allure/open"
+  },
+  "keywords": [],
+  "author": "Tsvetan Tsvetkov",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/compat": "^2.0.2",
+    "@eslint/eslintrc": "^3.3.4",
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.58.2",
+    "@types/adm-zip": "^0.5.8",
+    "@types/node": "^20.17.6",
+    "@types/pg": "^8.18.0",
+    "@typescript-eslint/eslint-plugin": "8.56.1",
+    "@typescript-eslint/parser": "8.56.1",
+    "adm-zip": "^0.5.16",
+    "allure-commandline": "^2.36.0",
+    "allure-js-commons": "^3.5.0",
+    "allure-playwright": "^3.5.0",
+    "axios": "^1.18.1",
+    "dotenv": "^17.3.1",
+    "eslint": "10.0.2",
+    "eslint-import-resolver-typescript": "4.4.4",
+    "eslint-plugin-import-x": "4.16.1",
+    "globals": "^17.3.0",
+    "pg": "^8.20.0",
+    "prettier": "^3.8.1",
+    "rimraf": "^6.1.3",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "zod": "^4.3.5"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.112.5"
+  }
+}
