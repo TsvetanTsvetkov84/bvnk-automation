@@ -1,8 +1,8 @@
 /**
  * Quote lifecycle states.
- * Source: BVNK API docs (https://docs.bvnk.com/reference/quotecreate) — success flow is
- * PENDING → (accept) → PAYMENT_OUT_PROCESSED; failure states are documented there too.
- * ACCEPTED/EXPIRED are simulator-observed intermediates.
+ * Source: official BVNK OpenAPI export, `QuoteDto.quoteStatus` enum (all 8 values).
+ * DIVERGENCE: `EXPIRED` is NOT in the official enum but is emitted by the simulator for
+ * quotes past their acceptance window — simulator-observed extension.
  */
 export const QUOTE_STATUS = {
   ESTIMATE: 'ESTIMATE',
@@ -12,15 +12,29 @@ export const QUOTE_STATUS = {
   PAYMENT_IN_FAILED: 'PAYMENT_IN_FAILED',
   CONVERSION_FAILED: 'CONVERSION_FAILED',
   PAYMENT_OUT_FAILED: 'PAYMENT_OUT_FAILED',
+  REFUNDED: 'REFUNDED',
+  /** Simulator-only — not part of the official enum. */
   EXPIRED: 'EXPIRED',
 } as const
 
-/** Payment progress states. Source: BVNK API docs (success flow + FAILED); PROCESSING is simulator-observed. */
+/**
+ * Payment progress states.
+ * Source: official BVNK OpenAPI export, `QuoteDto.paymentStatus` enum (all 7 values).
+ * DIVERGENCE: `PROCESSING` and `EXPIRED` are NOT in the official enum but are emitted by the
+ * simulator (during async settlement / after expiry) — simulator-observed extensions.
+ */
 export const PAYMENT_STATUS = {
   PENDING: 'PENDING',
-  PROCESSING: 'PROCESSING',
   SUCCESS: 'SUCCESS',
+  CANCELLED: 'CANCELLED',
   FAILED: 'FAILED',
+  REFUND_PENDING: 'REFUND_PENDING',
+  REFUNDED: 'REFUNDED',
+  REFUND_FAILED: 'REFUND_FAILED',
+  /** Simulator-only — not part of the official enum. */
+  PROCESSING: 'PROCESSING',
+  /** Simulator-only — not part of the official enum. */
+  EXPIRED: 'EXPIRED',
 } as const
 
 /** Body of `POST /api/v1/quote`. */

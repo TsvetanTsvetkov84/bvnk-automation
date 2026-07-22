@@ -1,0 +1,101 @@
+name: API Tests
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  workflow_call:
+  schedule:
+    # Nightly run — accumulates results for the Grafana flakiness dashboards
+    - cron: '0 3 * * *'
+
+# One report publish at a time — avoids gh-pages push races
+concurrency:
+  group: api-tests-pages
+  cancel-in-progress: false
+
+permissions:
+  contents: write # gh-pages publish
+
+jobs:
+  test:
+    name: Lint, typecheck & API tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # secrets are not directly usable in step `if:` — expose presence flag via env
+      HAS_TUNNEL_KEY: ${{ secrets.VPS_TUNNEL_KEY != '' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Quality gates
+        run: |
+          yarn check:filenames
+          yarn lint:check
+          yarn prettier:check
+          yarn typecheck
+
+      - name: Open SSH tunnel to results DB (optional)
+        if: ${{ env.HAS_TUNNEL_KEY == 'true' }}
+        env:
+          VPS_TUNNEL_KEY: ${{ secrets.VPS_TUNNEL_KEY }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$VPS_TUNNEL_KEY" > ~/.ssh/tunnel_key
+          chmod 600 ~/.ssh/tunnel_key
+          ssh -i ~/.ssh/tunnel_key -o StrictHostKeyChecking=accept-new \
+            -f -N -L 5432:127.0.0.1:5432 "devops@${VPS_HOST}"
+          echo "DB_HOST=127.0.0.1" >> "$GITHUB_ENV"
+          echo "DB_PORT=5432" >> "$GITHUB_ENV"
+          echo "DB_USER=${{ secrets.DB_USER }}" >> "$GITHUB_ENV"
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> "$GITHUB_ENV"
+          echo "DB_NAME=${{ secrets.DB_NAME }}" >> "$GITHUB_ENV"
+          echo "✅ Tunnel open — test results will be persisted"
+
+      - name: Run API tests
+        env:
+          TARGET_ENV: CI
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: yarn test:api
+
+      # ─── Allure report → GitHub Pages (with history/trends) ───
+
+      - name: Fetch previous report history
+        if: always() && github.event_name != 'pull_request'
+        continue-on-error: true
+        run: |
+          git fetch origin gh-pages --depth=1 && \
+          git show origin/gh-pages:history/history.json > /dev/null 2>&1 && \
+          mkdir -p out/allure-results/history && \
+          git archive origin/gh-pages history | tar -x -C out/allure-results/ || \
+          echo "No previous history — first run"
+
+      - name: Generate Allure report
+        if: always() && github.event_name != 'pull_request'
+        run: npx allure generate out/allure-results -o allure-report --clean
+
+      - name: Publish report to GitHub Pages
+        if: always() && github.event_name != 'pull_request'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./allure-report
+          publish_branch: gh-pages
+
+      - name: Upload raw results artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: out/allure-results
+          retention-days: 30

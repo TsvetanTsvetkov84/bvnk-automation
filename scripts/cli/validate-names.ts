@@ -7,6 +7,7 @@ const SKIP_DIR_NAMES: ReadonlySet<string> = new Set([
   '.idea',
   '.aiassistant',
   'out',
+  'test-results',
   'dist',
   'build',
   'coverage',

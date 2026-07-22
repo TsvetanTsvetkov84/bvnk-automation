@@ -17,8 +17,3 @@ export type HealthMetrics = {
   readonly approximate_db_size: string
   readonly total_authenticated_requests: number
 }
-
-/** FastAPI error body returned for 4xx responses (e.g. unknown wallet, invalid quote). */
-export type ApiErrorResponse = {
-  readonly detail: string
-}

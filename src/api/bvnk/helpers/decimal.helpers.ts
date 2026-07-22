@@ -28,3 +28,16 @@ export function toNumber(decimalString: string): number {
 export function toleranceForPrecision(decimalPlaces: number): number {
   return 10 ** -decimalPlaces
 }
+
+/**
+ * Half a unit of the least significant digit of a decimal string — the maximum
+ * rounding error the API could have introduced when formatting the value
+ * (assuming round-to-nearest). See docs/testing/decimal-assertions.md.
+ *
+ * @param decimalString - Decimal string as returned by the API (e.g. "0.00007692").
+ * @returns Half-ULP (e.g. "0.00007692" → 0.5e-8).
+ */
+export function halfUlpOf(decimalString: string): number {
+  const decimals = decimalString.split('.')[1]?.length ?? 0
+  return 0.5 * 10 ** -decimals
+}

@@ -12,4 +12,7 @@ export default defineConfig({
   fullyParallel: true,
   // eslint-disable-next-line no-restricted-properties -- CI flag read at config load, before getConfig() is available
   retries: process.env['CI'] ? 1 : 0,
+  // Cap CI workers: each is its own simulator account; the shared host rate-limits under load
+  // eslint-disable-next-line no-restricted-properties
+  ...(process.env['CI'] ? { workers: 4 } : {}),
 })

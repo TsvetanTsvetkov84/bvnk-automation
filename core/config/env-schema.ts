@@ -38,8 +38,6 @@ export const anthropicEnvSchema = z.object({
 })
 export type AnthropicEnvConfig = z.infer<typeof anthropicEnvSchema>
 
-// COMBINED SCHEMAS
-
 /**
  * COMBINED schemas.
  *

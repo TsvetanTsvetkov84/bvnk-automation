@@ -54,7 +54,10 @@ export default [
       'prefer-const': 'error',
 
       // TypeScript-Specific Rules
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
 
       // Avoid redundant await, but allow in try/catch blocks
       // async function getUser() {
