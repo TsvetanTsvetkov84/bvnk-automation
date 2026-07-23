@@ -30,6 +30,7 @@ export function buildTestResult(
     retry: testInfo.retry,
     duration: testInfo.duration,
     buildId,
+    project: 'bvnk',
   }
 }
 

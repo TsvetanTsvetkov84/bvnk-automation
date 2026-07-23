@@ -10,6 +10,7 @@ export interface TestResultBase {
   duration: number
   buildId: string
   targetEnv: string
+  project: string
 }
 
 export type TestResultInsert = TestResultBase
@@ -24,7 +25,7 @@ export class TestResultsRepository {
 
   async insert(testResult: TestResultInsert) {
     const config: QueryConfig = {
-      sql: 'INSERT INTO test_results (jira_id, test_name, priority, target_env, status, duration, retry, build_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
+      sql: 'INSERT INTO test_results (jira_id, test_name, priority, target_env, status, duration, retry, build_id, project) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)',
       params: [
         testResult.jiraId,
         testResult.testName,
@@ -34,6 +35,7 @@ export class TestResultsRepository {
         testResult.duration,
         testResult.retry,
         testResult.buildId,
+        testResult.project,
       ],
     }
 
