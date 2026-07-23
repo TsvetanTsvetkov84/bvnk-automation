@@ -1,0 +1,10 @@
+{
+  "jiraId": "unknown",
+  "priority": "unknown",
+  "testName": "rejects requests without a bearer token with 401",
+  "targetEnv": "CI",
+  "status": "passed",
+  "retry": 0,
+  "duration": 184,
+  "buildId": "30036491092"
+}
