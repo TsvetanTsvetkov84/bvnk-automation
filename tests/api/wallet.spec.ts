@@ -1,8 +1,8 @@
 import * as allure from 'allure-js-commons'
-import { toNumber } from '../../../src/api/bvnk/helpers/decimal.helpers.js'
-import { findWalletByCurrency } from '../../../src/api/bvnk/helpers/wallet.helpers.js'
-import type { ValidationErrorResponse } from '../../../src/api/bvnk/models/error.model.js'
-import { expect, test } from '../../../src/api/fixtures/api.fixture.js'
+import { toNumber } from '../../src/api/bvnk/helpers/decimal.helpers.js'
+import { findWalletByCurrency } from '../../src/api/bvnk/helpers/wallet.helpers.js'
+import type { ValidationErrorResponse } from '../../src/api/bvnk/models/error.model.js'
+import { expect, test } from '../../src/api/fixtures/api.fixture.js'
 
 /** Currencies the mandatory trades require — a fresh account must provide a wallet for each. */
 const REQUIRED_CURRENCIES = ['ETH', 'TRX', 'USDT'] as const

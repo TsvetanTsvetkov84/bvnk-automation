@@ -1,11 +1,11 @@
 import { setTimeout as sleep } from 'node:timers/promises'
 import * as allure from 'allure-js-commons'
-import { GLOBAL_CONST } from '../../../core/config/constants.js'
-import type { BvnkApi } from '../../../src/api/bvnk/bvnk-api.js'
-import { findWalletByCurrency, getWallets } from '../../../src/api/bvnk/helpers/wallet.helpers.js'
-import type { Quote } from '../../../src/api/bvnk/models/quote.model.js'
-import { PAYMENT_STATUS, QUOTE_STATUS } from '../../../src/api/bvnk/models/quote.model.js'
-import { expect, test } from '../../../src/api/fixtures/api.fixture.js'
+import { GLOBAL_CONST } from '../../core/config/constants.js'
+import type { BvnkApi } from '../../src/api/bvnk/bvnk-api.js'
+import { findWalletByCurrency, getWallets } from '../../src/api/bvnk/helpers/wallet.helpers.js'
+import type { Quote } from '../../src/api/bvnk/models/quote.model.js'
+import { PAYMENT_STATUS, QUOTE_STATUS } from '../../src/api/bvnk/models/quote.model.js'
+import { expect, test } from '../../src/api/fixtures/api.fixture.js'
 
 /** Creates a small valid ETH→TRX quote for lifecycle testing. */
 async function createTestQuote(bvnkApi: BvnkApi): Promise<Quote> {

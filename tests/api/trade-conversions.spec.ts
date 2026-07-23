@@ -1,17 +1,17 @@
 import * as allure from 'allure-js-commons'
-import { GLOBAL_CONST } from '../../../core/config/constants.js'
-import { waitFor } from '../../../core/utils/generic-polling-helper.js'
-import type { BvnkApi } from '../../../src/api/bvnk/bvnk-api.js'
+import { GLOBAL_CONST } from '../../core/config/constants.js'
+import { waitFor } from '../../core/utils/generic-polling-helper.js'
+import type { BvnkApi } from '../../src/api/bvnk/bvnk-api.js'
 import {
   halfUlpOf,
   toNumber,
   toleranceForPrecision,
-} from '../../../src/api/bvnk/helpers/decimal.helpers.js'
-import { findWalletByCurrency, getWallets } from '../../../src/api/bvnk/helpers/wallet.helpers.js'
-import type { Quote } from '../../../src/api/bvnk/models/quote.model.js'
-import { PAYMENT_STATUS, QUOTE_STATUS } from '../../../src/api/bvnk/models/quote.model.js'
-import type { Wallet } from '../../../src/api/bvnk/models/wallet.model.js'
-import { expect, test } from '../../../src/api/fixtures/api.fixture.js'
+} from '../../src/api/bvnk/helpers/decimal.helpers.js'
+import { findWalletByCurrency, getWallets } from '../../src/api/bvnk/helpers/wallet.helpers.js'
+import type { Quote } from '../../src/api/bvnk/models/quote.model.js'
+import { PAYMENT_STATUS, QUOTE_STATUS } from '../../src/api/bvnk/models/quote.model.js'
+import type { Wallet } from '../../src/api/bvnk/models/wallet.model.js'
+import { expect, test } from '../../src/api/fixtures/api.fixture.js'
 
 /** The three mandatory conversions from the task specification. */
 const TRADES = [

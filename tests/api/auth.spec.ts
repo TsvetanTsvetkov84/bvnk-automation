@@ -1,7 +1,7 @@
 import * as allure from 'allure-js-commons'
-import { createBvnkApi } from '../../../src/api/bvnk/bvnk-api.js'
-import type { ApiErrorResponse } from '../../../src/api/bvnk/models/error.model.js'
-import { expect, test } from '../../../src/api/fixtures/api.fixture.js'
+import { createBvnkApi } from '../../src/api/bvnk/bvnk-api.js'
+import type { ApiErrorResponse } from '../../src/api/bvnk/models/error.model.js'
+import { expect, test } from '../../src/api/fixtures/api.fixture.js'
 
 /**
  * Authentication behavior of the protected endpoints.

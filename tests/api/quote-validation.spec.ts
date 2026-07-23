@@ -1,12 +1,12 @@
 import * as allure from 'allure-js-commons'
-import type { BvnkApi } from '../../../src/api/bvnk/bvnk-api.js'
-import { findWalletByCurrency, getWallets } from '../../../src/api/bvnk/helpers/wallet.helpers.js'
+import type { BvnkApi } from '../../src/api/bvnk/bvnk-api.js'
+import { findWalletByCurrency, getWallets } from '../../src/api/bvnk/helpers/wallet.helpers.js'
 import type {
   ApiErrorResponse,
   ValidationErrorResponse,
-} from '../../../src/api/bvnk/models/error.model.js'
-import type { QuoteRequest } from '../../../src/api/bvnk/models/quote.model.js'
-import { expect, test } from '../../../src/api/fixtures/api.fixture.js'
+} from '../../src/api/bvnk/models/error.model.js'
+import type { QuoteRequest } from '../../src/api/bvnk/models/quote.model.js'
+import { expect, test } from '../../src/api/fixtures/api.fixture.js'
 
 /** Builds a valid ETH→TRX quote request for this worker's account, ready to be mutated per case. */
 async function validQuoteRequest(bvnkApi: BvnkApi): Promise<QuoteRequest> {
