@@ -46,6 +46,7 @@ jobs:
 
       - name: Open SSH tunnel to results DB (optional)
         if: ${{ env.HAS_TUNNEL_KEY == 'true' }}
+        continue-on-error: true # best-effort persistence — never fail the run over it
         env:
           VPS_TUNNEL_KEY: ${{ secrets.VPS_TUNNEL_KEY }}
           VPS_HOST: ${{ secrets.VPS_HOST }}
