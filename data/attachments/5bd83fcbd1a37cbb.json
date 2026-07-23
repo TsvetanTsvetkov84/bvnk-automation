@@ -1,0 +1,68 @@
+{
+  "id": 219,
+  "description": "USDT Wallet #75936",
+  "currency": {
+    "id": 315,
+    "code": "USDT",
+    "fiat": false,
+    "icon": "https://coindirect-filestore.s3.amazonaws.com/com.coindirect.core.finance.Currency/6f5b5173-1621-44b9-bf84-63c0bb595b2d.png",
+    "name": "Tether",
+    "withdrawalParameters": [],
+    "options": {
+      "address": "https://usdt.tokenview.io/en/address/{{address}}",
+      "explorer": "https://usdt.tokenview.io/",
+      "transaction": "https://usdt.tokenview.io/en/tx/{{hash}}",
+      "confirmations": 12
+    },
+    "withdrawalFee": "0",
+    "depositFee": "0",
+    "supportsDeposits": false,
+    "supportsWithdrawals": false,
+    "quantityPrecision": 6,
+    "pricePrecision": 8,
+    "protocols": [
+      {
+        "code": "BEP20",
+        "network": "Binance Smart Chain",
+        "networkCode": "BINANCE"
+      },
+      {
+        "code": "ERC20",
+        "network": "Ethereum",
+        "networkCode": "ETHEREUM"
+      },
+      {
+        "code": "TRC20",
+        "network": "Tron",
+        "networkCode": "TRON"
+      },
+      {
+        "code": "POLYGON",
+        "network": "Polygon",
+        "networkCode": "POLYGON"
+      }
+    ]
+  },
+  "supportsWithdrawals": false,
+  "supportsDeposits": false,
+  "custodianWallet": null,
+  "supportsThirdParty": false,
+  "supportsInternalBvnkNetworkTransfers": false,
+  "partner": null,
+  "isEmoney": false,
+  "supportedTransferDestinations": [],
+  "protocol": "ERC20",
+  "address": "simulated-address-654652051",
+  "lookup": null,
+  "balance": "10400.00",
+  "available": "10400.00",
+  "withdrawalFee": "0.000005",
+  "depositFee": "0",
+  "convertedAvailable": "10000",
+  "alternatives": [],
+  "approxAvailable": "10400.00",
+  "approxBalance": "10400.00",
+  "approxConvertedAvailable": "10000",
+  "lsid": "acc:90910006795130:cQ1e:0",
+  "status": "ACTIVE"
+}

@@ -1,0 +1,10 @@
+{
+  "jiraId": "unknown",
+  "priority": "unknown",
+  "testName": "quote expires after 20s and can no longer be accepted",
+  "targetEnv": "CI",
+  "status": "passed",
+  "retry": 0,
+  "duration": 22647,
+  "buildId": "29983300067"
+}
