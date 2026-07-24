@@ -6,11 +6,11 @@
 Solution for the **BVNK QA Engineering Task: API Testing** — end-to-end tests for
 currency conversion/trades against the [BVNK API simulator](https://bvnkapisimulator.pythonanywhere.com/docs),
 built with **TypeScript + Playwright + Allure**, CI on **GitHub Actions**, and an optional
-**Postgres + Grafana** observability pipeline for flakiness tracking.
+**Postgres + Grafana** pipeline for test-result metrics.
 
-- 📊 **Live Allure report:** <https://tsvetantsvetkov84.github.io/bvnk-automation/>
+- 📊 **Live Allure report (GitHub Pages):** <https://tsvetantsvetkov84.github.io/bvnk-automation/> — full run history, trends, and per-test detail, republished on every run
 - ▶️ **Trigger a run yourself:** comment `/run-tests` on the pinned issue — no account access needed
-- 📈 **Live flakiness dashboards:** <https://grafana.tsvetan-tsvetkov.eu/> (credentials provided in the submission email)
+- 📈 **Test-metrics dashboard:** [BVNK API Tests in Grafana](https://grafana.tsvetan-tsvetkov.eu/d/bvnk-api-tests) — pass rate, test volume, pass/fail trend, and AI failure classification (hosted on my portfolio — see [Optional Extra](#optional-extra-tsvetan-tsvetkovs-portfolio))
 
 ## Quick start
 
@@ -24,7 +24,7 @@ No configuration required — the simulator URL is the default. Node ≥ 22, Yar
 
 ## The tests
 
-**22 tests, ~25s wall-clock** (parallel workers, each with its own isolated `/init` account).
+**21 tests, ~25s wall-clock** (parallel workers, each with its own isolated `/init` account).
 
 | Spec                        | Covers                                                                                                                                                                                                                                                  |
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -85,25 +85,32 @@ Found while building the suite (all verified, reproducible):
 
 GitHub Actions ([api-tests.yml](.github/workflows/api-tests.yml)): quality gates
 (lint, typecheck, prettier, filename conventions) → API tests → **Allure report published
-to GitHub Pages** with run-over-run history. Triggers: every push, nightly cron (builds
-the flakiness dataset), manual dispatch, and **`/run-tests` issue comments** so external
+to GitHub Pages** with run-over-run history. Triggers: every push, nightly cron (accumulates
+the metrics dataset), manual dispatch, and **`/run-tests` issue comments** so external
 reviewers can start runs without repo access.
 
 Everything needed to run the tests is free and account-less. Two optional integrations
 activate only when secrets are configured, and skip with a logged warning otherwise:
 
-- **Result persistence** — each test result (status, duration, retry, build id) is written
-  to Postgres on my VPS over a restricted SSH tunnel, feeding Grafana dashboards
-  (pass/fail trends, flakiness rate per test, duration percentiles)
+- **Result persistence** — each test result (status, duration, retry, build id, tagged
+  `project = 'bvnk'`) is written to Postgres on my VPS over a restricted SSH tunnel, feeding
+  the [BVNK API Tests](https://grafana.tsvetan-tsvetkov.eu/d/bvnk-api-tests) Grafana dashboard
+  (pass rate, test volume, pass/fail trend, AI failure classification). This reuses my
+  portfolio's shared Postgres/Grafana to save setup time — see [Optional Extra](#optional-extra-tsvetan-tsvetkovs-portfolio)
 - **AI-assisted failure review** — on CI failures, the failure context (errors, stack
   traces, network errors from the Playwright trace) is sent to Claude for root-cause
   classification (`flaky | bug | env-issue | assertion`), attached to the Allure report
   and persisted alongside the result. Architecture: [docs/ai/ai-assisted-failure-review.md](docs/ai/ai-assisted-failure-review.md)
 
+Both integrations — and the always-on Allure attachment — are driven after **every** test by a
+single Playwright **auto fixture**, deliberately not a top-level `afterEach` (which is file-scoped
+and would silently record only one spec). Why this matters and how it works:
+[docs/testing/result-recording-fixture.md](docs/testing/result-recording-fixture.md).
+
 ## Project structure
 
 ```
-configs/          Playwright configs + suite registry
+playwright.config.ts   Playwright configuration (root)
 core/             Service-agnostic building blocks
   api/            HTTP client abstraction (auth strategies, typed responses)
   ai/             AI failure-review (provider-agnostic client + analyzer)
@@ -113,17 +120,25 @@ core/             Service-agnostic building blocks
 src/api/
   bvnk/           BVNK service under test: models, clients, helpers
   fixtures/       Worker-scoped account fixture + reporting hooks
-tests/api/bvnk/   The specs
+tests/api/   The specs
 docs/             Design docs (testing, AI review, code quality)
 ```
 
-## Reviewer access (optional)
+## Optional Extra: Tsvetan Tsvetkov's Portfolio
 
-The broader setup this project plugs into — live behind Basic Auth (credentials in the
-submission email):
+The broader personal infrastructure this project plugs into — live behind Basic Auth
+(credentials in the submission email):
 
-| URL                                                                | What's there                                                                                                |
-| ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
-| [grafana.tsvetan-tsvetkov.eu](https://grafana.tsvetan-tsvetkov.eu) | Test-results dashboards: flakiness rates, AI failure analysis                                               |
-| [git.tsvetan-tsvetkov.eu](https://git.tsvetan-tsvetkov.eu)         | Self-hosted Gitea — infrastructure-as-code repo (Docker/Traefik stack) and the broader automation portfolio |
-| [tsvetan-tsvetkov.eu](https://tsvetan-tsvetkov.eu)                 | Landing page for the whole setup                                                                            |
+| URL                                                                | What's there                                                                                                                                                                |
+| ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [tsvetan-tsvetkov.eu](https://tsvetan-tsvetkov.eu)                 | **Portfolio landing page** — entry point to the whole self-hosted setup                                                                                                     |
+| [grafana.tsvetan-tsvetkov.eu](https://grafana.tsvetan-tsvetkov.eu) | The [**BVNK API Tests**](https://grafana.tsvetan-tsvetkov.eu/d/bvnk-api-tests) dashboard — pass rate, test volume, pass/fail trend over time, and AI failure classification |
+| [git.tsvetan-tsvetkov.eu](https://git.tsvetan-tsvetkov.eu)         | Self-hosted Gitea — infrastructure-as-code repo (Docker/Traefik stack) and the broader automation portfolio                                                                 |
+
+> **This is a deliberate shortcut, not a pattern to copy.** This project persists its test
+> metrics into the **shared** Postgres + Grafana that already runs my portfolio, purely to
+> save the time and effort of standing up a dedicated stack for the assessment. **In a real
+> project you would not do this** — a service's test observability shouldn't be coupled into
+> an unrelated shared instance; each project would own its persistence and dashboards. The
+> data is kept isolated within the shared DB by tagging every row `project = 'bvnk'` and
+> filtering the dashboard on it.

@@ -4,7 +4,7 @@
 
 When a Playwright test fails, the framework automatically collects failure context, sends it to an AI provider for analysis, and outputs the result as an Allure attachment and a Postgres record — without any manual intervention.
 
-The feature is transparent to test authors: it hooks into the existing `afterEach` fixture and only activates on failure.
+The feature is transparent to test authors: it runs from the `_report` auto fixture that records every test result (`api.fixture.ts`) and only activates on failure. Why that recording is an auto fixture rather than a top-level `afterEach`: [Per-test result recording](../testing/result-recording-fixture.md).
 
 ---
 
@@ -12,7 +12,7 @@ The feature is transparent to test authors: it hooks into the existing `afterEac
 
 ```
 Test completes
-  └── afterEach hook (api.fixture.ts)
+  └── _report auto fixture (api.fixture.ts)
         ├── buildTestResult        → assembles result from testInfo + annotations
         ├── reportTestResult       → Allure attachment (always, local + CI)
         │
