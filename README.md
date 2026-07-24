@@ -8,8 +8,8 @@ currency conversion/trades against the [BVNK API simulator](https://bvnkapisimul
 built with **TypeScript + Playwright + Allure**, CI on **GitHub Actions**, and an optional
 **Postgres + Grafana** pipeline for test-result metrics.
 
+- ▶️ **Trigger a run yourself:** comment `/run-tests` on [issue #1](https://github.com/TsvetanTsvetkov84/bvnk-automation/issues/1) — no account access needed. You get a reply with ✅/❌ and links to the run and Allure report.
 - 📊 **Live Allure report (GitHub Pages):** <https://tsvetantsvetkov84.github.io/bvnk-automation/> — full run history, trends, and per-test detail, republished on every run
-- ▶️ **Trigger a run yourself:** comment `/run-tests` on the pinned issue — no account access needed
 - 📈 **Test-metrics dashboard:** [BVNK API Tests in Grafana](https://grafana.tsvetan-tsvetkov.eu/d/bvnk-api-tests) — pass rate, test volume, pass/fail trend, and AI failure classification (hosted on my portfolio — see [Optional Extra](#optional-extra-tsvetan-tsvetkovs-portfolio))
 
 ## Quick start
@@ -29,9 +29,9 @@ No configuration required — the simulator URL is the default. Node ≥ 22, Yar
 | Spec                        | Covers                                                                                                                                                                                                                                                  |
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `trade-conversions.spec.ts` | **The 3 mandatory E2E trades** (1 ETH→TRX, 420 TRX→USDT, 987 TRX→ETH), data-driven; 6 Allure steps each: balance snapshot → create quote → validate (status, pair, 20s expiry window, fee math) → accept → await async settlement → verify debit/credit |
-| `auth.spec.ts`              | 401 for missing/invalid bearer token across endpoints; `/echo` round-trip                                                                                                                                                                               |
+| `auth.spec.ts`              | 401 for missing/invalid bearer token across endpoints; authenticated `/echo` returns the sent payload unchanged                                                                                                                                         |
 | `quote-lifecycle.spec.ts`   | Quote expires after 20s (accept → 412, status `EXPIRED`); double-accept rejected; list/get consistency                                                                                                                                                  |
-| `quote-validation.spec.ts`  | Currency/wallet mismatch (400), missing field (422 with field location), zero amount, insufficient funds (412), unknown/malformed uuid, **negative amount — known defect, see Findings**                                                                |
+| `quote-validation.spec.ts`  | Currency/wallet mismatch (400), missing field (422 with field location), zero amount, insufficient funds (412), unknown/malformed uuid, **negative amount — accepted by the API; flagged as an assumption, see Findings**                               |
 | `wallet.spec.ts`            | Funded wallets precondition for the trade currencies, get-by-id, pagination (`offset`/`max_count`), unknown/non-numeric id                                                                                                                              |
 
 ## Approach
@@ -40,8 +40,24 @@ No configuration required — the simulator URL is the default. Node ≥ 22, Yar
 classified as: (a) task-spec requirement, (b) documented API contract (simulator OpenAPI /
 official [BVNK API reference](https://docs.bvnk.com/)), or (c) an explicitly labeled
 assumption. Exploratory probing was used to learn _mechanics_ (status codes for
-unspecified errors are pinned as regression checks and labeled as such) — but never to
-launder observed behavior into "correct behavior".
+unspecified errors are pinned as regression checks and labeled as such — see the table
+below) — but never to launder observed behavior into "correct behavior".
+
+**Status-code provenance.** The simulator's OpenAPI documents only `200`, `201`, and `422`.
+Every other asserted code is a **logical assumption** — inferred from exploratory probing plus
+HTTP semantics, and pinned as a regression check (each such test carries an inline label). If the
+API ever documents or changes one of these, the pinned test flags it.
+
+| Status            | Asserted for                                         | Provenance                                                                                     |
+| ----------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `200` `201` `422` | success responses; request validation                | ✅ **Documented** — simulator OpenAPI                                                          |
+| `401`             | missing / invalid bearer token                       | 🧠 **Logical assumption** — [RFC 6750](https://datatracker.ietf.org/doc/html/rfc6750) (bearer) |
+| `400`             | currency/wallet mismatch, zero amount, double-accept | 🧠 **Logical assumption** — observed behaviour, pinned                                         |
+| `404`             | unknown wallet id, unknown quote uuid                | 🧠 **Logical assumption** — observed behaviour, pinned                                         |
+| `412`             | insufficient funds, accepting an expired quote       | 🧠 **Logical assumption** — observed behaviour, pinned                                         |
+
+Response bodies (error `detail` strings, `quoteStatus`/`paymentStatus` values) are likewise
+observed, not spec'd — see Finding #3 for the status-enum divergence from BVNK's official `QuoteDto`.
 
 **Design decisions worth reviewing:**
 
@@ -64,9 +80,14 @@ launder observed behavior into "correct behavior".
 
 Found while building the suite (all verified, reproducible):
 
-1. **DEFECT — negative amounts accepted:** `POST /api/v1/quote` with `amountIn: -5`
-   returns **201** and creates a quote with negative `amountOut`. Expected: 4xx validation
-   error. Covered by a `test.fail()`-marked test that will flag itself when fixed.
+1. **ASSUMPTION (product-sense) — negative amounts accepted:** `POST /api/v1/quote` with
+   `amountIn: -5` returns **201** and creates a quote with a negative `amountOut`. This is
+   _contract-conformant_: the simulator's OpenAPI permits it (the `amountIn` string regex allows a
+   leading `-`, and the numeric branch sets no minimum), and no source (task PDF, simulator
+   OpenAPI, official [BVNK docs](https://docs.bvnk.com/reference/quotecreate)) requires rejection.
+   Rejecting a negative trade amount is a domain judgement, not a documented rule — so this is an
+   assumption, not a defect. Covered by a **characterization test** that pins the actual `201` +
+   negative `amountOut`; it turns red (prompting a revisit) if the behaviour ever changes.
 2. **Broken URL in the task PDF:** the PDF references `bvnksimulator.pythonanywhere.com`
    (404); the working host from the assessment email is `bvnkapisimulator.pythonanywhere.com`
    (note the extra "api" in the name).
@@ -103,8 +124,7 @@ activate only when secrets are configured, and skip with a logged warning otherw
   and persisted alongside the result. Architecture: [docs/ai/ai-assisted-failure-review.md](docs/ai/ai-assisted-failure-review.md)
 
 Both integrations — and the always-on Allure attachment — are driven after **every** test by a
-single Playwright **auto fixture**, deliberately not a top-level `afterEach` (which is file-scoped
-and would silently record only one spec). Why this matters and how it works:
+single Playwright **auto fixture**. Why this matters and how it works:
 [docs/testing/result-recording-fixture.md](docs/testing/result-recording-fixture.md).
 
 ## Project structure
@@ -129,15 +149,15 @@ docs/             Design docs (testing, AI review, code quality)
 The broader personal infrastructure this project plugs into — live behind Basic Auth
 (credentials in the submission email):
 
-| URL                                                                | What's there                                                                                                                                                                |
-| ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [tsvetan-tsvetkov.eu](https://tsvetan-tsvetkov.eu)                 | **Portfolio landing page** — entry point to the whole self-hosted setup                                                                                                     |
-| [grafana.tsvetan-tsvetkov.eu](https://grafana.tsvetan-tsvetkov.eu) | The [**BVNK API Tests**](https://grafana.tsvetan-tsvetkov.eu/d/bvnk-api-tests) dashboard — pass rate, test volume, pass/fail trend over time, and AI failure classification |
-| [git.tsvetan-tsvetkov.eu](https://git.tsvetan-tsvetkov.eu)         | Self-hosted Gitea — infrastructure-as-code repo (Docker/Traefik stack) and the broader automation portfolio                                                                 |
+| URL                                                                | What's there                                                                                                                                                                           |
+| ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [tsvetan-tsvetkov.eu](https://tsvetan-tsvetkov.eu)                 | **Portfolio landing page** — entry point to the whole self-hosted setup                                                                                                                |
+| [grafana.tsvetan-tsvetkov.eu](https://grafana.tsvetan-tsvetkov.eu) | The [**BVNK API Tests**](https://grafana.tsvetan-tsvetkov.eu/d/bvnk-api-tests) dashboard lives here — pass rate, test volume, pass/fail trend over time, and AI failure classification |
+| [git.tsvetan-tsvetkov.eu](https://git.tsvetan-tsvetkov.eu)         | Self-hosted Gitea — infrastructure-as-code repo (Docker/Traefik stack) and the broader automation portfolio                                                                            |
 
-> **This is a deliberate shortcut, not a pattern to copy.** This project persists its test
-> metrics into the **shared** Postgres + Grafana that already runs my portfolio, purely to
-> save the time and effort of standing up a dedicated stack for the assessment. **In a real
+> **Saving the test results to the Portfolio Postgres and reusing the Grafana is a deliberate choice, not a pattern to copy.**
+> The BVNK project persists its test metrics into the **shared** Postgres + Grafana that already runs my portfolio, purely to
+> save the time and avoid starting a dedicated infra stack for the assessment. **In a real
 > project you would not do this** — a service's test observability shouldn't be coupled into
 > an unrelated shared instance; each project would own its persistence and dashboards. The
 > data is kept isolated within the shared DB by tagging every row `project = 'bvnk'` and
