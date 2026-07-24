@@ -27,6 +27,8 @@ type WorkerFixtures = {
 type TestFixtures = {
   /** Authenticated BVNK API clients bound to this worker's account. */
   bvnkApi: BvnkApi
+  /** Auto fixture that records each test result (Allure + optional Postgres/AI review). */
+  _report: void
 }
 
 export const test = base.extend<TestFixtures, WorkerFixtures>({
@@ -80,32 +82,38 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
   bvnkApi: async ({ config, account }, use) => {
     await use(createBvnkApi(config.BVNK_BASE_URL, () => account.token))
   },
-})
 
-/**
- * Post-test hook: attaches the result to Allure always; when configured, additionally persists
- * to Postgres (feeds the Grafana flakiness dashboards) and runs AI failure analysis.
- * Both extras are optional and never affect the test outcome.
- */
-test.afterEach(async ({ db, config }, testInfo) => {
-  // eslint-disable-next-line no-restricted-properties
-  const buildId = process.env['GITHUB_RUN_ID'] ?? process.env['BUILD_ID'] ?? 'local'
+  /**
+   * Records each test result: always attaches it to Allure; when DB env is configured, also
+   * persists to Postgres and (on failure) runs AI failure analysis. Both extras are optional
+   * and never affect the test outcome.*
+   */
+  _report: [
+    async ({ db, config }, use) => {
+      await use()
 
-  const testResult = buildTestResult(testInfo, config.TARGET_ENV, buildId)
-  await reportTestResult(testResult)
+      const testInfo = test.info()
+      // eslint-disable-next-line no-restricted-properties
+      const buildId = process.env['GITHUB_RUN_ID'] ?? process.env['BUILD_ID'] ?? 'local'
 
-  if (db) {
-    try {
-      const repo = new TestResultsRepository(db)
-      await repo.insert(testResult)
+      const testResult = buildTestResult(testInfo, config.TARGET_ENV, buildId)
+      await reportTestResult(testResult) // attach test result to current test
 
-      if (testInfo.status !== 'passed') {
-        await runAiFailureAnalysis(testInfo, repo, buildId)
+      if (db) {
+        try {
+          const repo = new TestResultsRepository(db)
+          await repo.insert(testResult) // insert test info into Postgres DB for custom test execution analytics
+
+          if (testInfo.status !== 'passed') {
+            await runAiFailureAnalysis(testInfo, repo, buildId) // perform automatic AI analysis and update results in the Postgres
+          }
+        } catch (err) {
+          console.error('Test-result persistence failed (non-blocking):', err)
+        }
       }
-    } catch (err) {
-      console.error('Test-result persistence failed (non-blocking):', err)
-    }
-  }
+    },
+    { auto: true },
+  ],
 })
 
 export { expect }
