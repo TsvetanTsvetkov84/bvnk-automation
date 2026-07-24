@@ -15,8 +15,7 @@
     "prettier:check": "prettier --check .",
     "prettier:fix": "prettier --write .",
     "clearAllureResults": "rimraf ./out/allure-results",
-    "test:run": "yarn clearAllureResults && tsx scripts/cli/test.ts",
-    "test:api": "yarn test:run api",
+    "test:api": "yarn clearAllureResults && playwright test",
     "allure:open": "ALLURE_RESULTS_DIR=out/allure-results node core/reporting/allure/open"
   },
   "keywords": [],
