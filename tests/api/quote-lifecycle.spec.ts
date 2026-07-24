@@ -50,6 +50,8 @@ test.describe('Quote lifecycle rules', () => {
     )
 
     await allure.step('3. Accepting the expired quote is rejected (412)', async () => {
+      // Logical assumption: 412 is not in the simulator's OpenAPI (documents only 200/201/422);
+      // pinned from observed behaviour as a regression check. See README → Status-code provenance.
       const acceptRes = await bvnkApi.quotes.accept(quote.uuid)
       expect(acceptRes.status, 'accepting an expired quote must fail').toBe(412)
     })
@@ -73,6 +75,8 @@ test.describe('Quote lifecycle rules', () => {
     })
 
     await allure.step('2. Second accept is rejected (400)', async () => {
+      // Logical assumption: 400 is not in the simulator's OpenAPI (documents only 200/201/422);
+      // pinned from observed behaviour as a regression check. See README → Status-code provenance.
       const secondAccept = await bvnkApi.quotes.accept(quote.uuid)
       expect(secondAccept.status, 'double acceptance must be rejected').toBe(400)
     })

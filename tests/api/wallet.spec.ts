@@ -72,6 +72,8 @@ test.describe('Wallets', () => {
   })
 
   test('returns 404 for an unknown wallet id', async ({ bvnkApi }) => {
+    // Logical assumption: 404 is not in the simulator's OpenAPI (documents only 200/201/422);
+    // pinned from observed behaviour as a regression check. See README → Status-code provenance.
     const res = await bvnkApi.wallets.get(999_999)
     expect(res.status).toBe(404)
   })

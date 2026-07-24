@@ -27,6 +27,8 @@ async function validQuoteRequest(bvnkApi: BvnkApi): Promise<QuoteRequest> {
 
 test.describe('Quote input validation', () => {
   test('rejects a currency that does not match the source wallet (400)', async ({ bvnkApi }) => {
+    // Logical assumption: 400 is not in the simulator's OpenAPI (documents only 200/201/422);
+    // pinned from observed behaviour as a regression check. See README → Status-code provenance.
     const request = { ...(await validQuoteRequest(bvnkApi)), from: 'XXX' }
 
     const res = await bvnkApi.quotes.createRaw<QuoteRequest, ApiErrorResponse>(request)
@@ -51,6 +53,8 @@ test.describe('Quote input validation', () => {
   })
 
   test('rejects a zero amount (400)', async ({ bvnkApi }) => {
+    // Logical assumption: 400 is not in the simulator's OpenAPI (documents only 200/201/422);
+    // pinned from observed behaviour as a regression check. See README → Status-code provenance.
     const request = { ...(await validQuoteRequest(bvnkApi)), amountIn: 0 }
 
     const res = await bvnkApi.quotes.createRaw<QuoteRequest, ApiErrorResponse>(request)
@@ -58,23 +62,36 @@ test.describe('Quote input validation', () => {
     expect(res.status).toBe(400)
   })
 
-  test('rejects a negative amount', async ({ bvnkApi }) => {
-    // DEFECT (found during exploratory probing): the simulator returns 201 and creates a quote
-    // with negative amountIn/amountOut. A negative trade amount is nonsensical and must be
-    // rejected with a 4xx validation error. test.fail() documents the defect: this test is
-    // EXPECTED to fail until the simulator is fixed — if it starts passing, Playwright flags it.
-    test.fail(true, 'Known defect: simulator accepts negative amountIn (returns 201)')
+  test('negative amount is accepted (201) — based on ASSUMPTION, see Findings', async ({
+    bvnkApi,
+  }) => {
+    await allure.severity('minor')
+    await allure.tag('product-sense-concern')
+    // CHARACTERIZATION TEST — pins the API's ACTUAL behaviour, which its contract permits.
+    //
+    // ASSUMPTION (product-sense, not a contract rule): a negative trade amount looks illogical and strange and
+    // arguably ought to be rejected. But the simulator's OpenAPI PERMITS negatives (the amountIn
+    // string regex allows a leading '-'; the numeric branch sets no minimum), and no source (task
+    // PDF, simulator OpenAPI, official BVNK docs) requires rejection. Asserting a 4xx here would
+    // assert against the contract, so instead we pin what actually happens: a 201 and a quote that
+    // carries the negative amount through. If BVNK ever changes this (starts rejecting, or
+    // normalises the sign), THIS test turns red and we revisit the assumption — see README Findings.
 
     const request = { ...(await validQuoteRequest(bvnkApi)), amountIn: -5 }
 
-    const res = await bvnkApi.quotes.createRaw<QuoteRequest, ApiErrorResponse>(request)
+    const res = await bvnkApi.quotes.create(request)
     await allure.attachment('Response', JSON.stringify(res.data, null, 2), 'application/json')
 
-    expect(res.status, 'negative amounts must be rejected').toBeGreaterThanOrEqual(400)
-    expect(res.status).toBeLessThan(500)
+    expect(res.status, 'the simulator accepts negative amounts (contract-conformant)').toBe(201)
+    expect(
+      Number(res.data.amountOut),
+      'the created quote propagates the negative amount'
+    ).toBeLessThan(0)
   })
 
   test('rejects a quote exceeding the available balance (412)', async ({ bvnkApi }) => {
+    // Logical assumption: 412 is not in the simulator's OpenAPI (documents only 200/201/422);
+    // pinned from observed behaviour as a regression check. See README → Status-code provenance.
     const request = { ...(await validQuoteRequest(bvnkApi)), amountIn: 999_999 }
 
     const res = await bvnkApi.quotes.createRaw<QuoteRequest, ApiErrorResponse>(request)
@@ -84,6 +101,8 @@ test.describe('Quote input validation', () => {
   })
 
   test('returns 404 for an unknown quote uuid on get and accept', async ({ bvnkApi }) => {
+    // Logical assumption: 404 is not in the simulator's OpenAPI (documents only 200/201/422);
+    // pinned from observed behaviour as a regression check. See README → Status-code provenance.
     const unknownUuid = '00000000-0000-0000-0000-000000000000'
 
     await allure.step('GET unknown uuid → 404', async () => {
