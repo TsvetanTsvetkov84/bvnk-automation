@@ -1,0 +1,11 @@
+{
+  "jiraId": "unknown",
+  "priority": "unknown",
+  "testName": "rejects a negative amount",
+  "targetEnv": "CI",
+  "status": "failed",
+  "retry": 0,
+  "duration": 152,
+  "buildId": "30070448382",
+  "project": "bvnk"
+}

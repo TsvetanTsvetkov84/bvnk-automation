@@ -1,0 +1,11 @@
+{
+  "jiraId": "unknown",
+  "priority": "unknown",
+  "testName": "an accepted quote cannot be accepted twice",
+  "targetEnv": "CI",
+  "status": "passed",
+  "retry": 0,
+  "duration": 279,
+  "buildId": "30070448382",
+  "project": "bvnk"
+}

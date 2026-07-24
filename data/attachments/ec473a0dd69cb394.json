@@ -1,0 +1,11 @@
+{
+  "jiraId": "unknown",
+  "priority": "unknown",
+  "testName": "rejects a non-numeric wallet id (422 parsing error)",
+  "targetEnv": "CI",
+  "status": "passed",
+  "retry": 0,
+  "duration": 67,
+  "buildId": "30070448382",
+  "project": "bvnk"
+}
