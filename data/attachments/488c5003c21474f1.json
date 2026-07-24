@@ -1,0 +1,11 @@
+{
+  "jiraId": "unknown",
+  "priority": "unknown",
+  "testName": "rejects a quote with a missing required field (422 with field location)",
+  "targetEnv": "CI",
+  "status": "passed",
+  "retry": 0,
+  "duration": 90,
+  "buildId": "30076162668",
+  "project": "bvnk"
+}
