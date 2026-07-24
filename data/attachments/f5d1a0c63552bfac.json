@@ -1,0 +1,11 @@
+{
+  "jiraId": "unknown",
+  "priority": "unknown",
+  "testName": "supports pagination via offset and max_count",
+  "targetEnv": "CI",
+  "status": "passed",
+  "retry": 0,
+  "duration": 369,
+  "buildId": "30076849775",
+  "project": "bvnk"
+}

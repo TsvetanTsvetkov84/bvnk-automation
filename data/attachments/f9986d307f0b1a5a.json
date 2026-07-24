@@ -1,0 +1,11 @@
+{
+  "jiraId": "unknown",
+  "priority": "unknown",
+  "testName": "returns 404 for an unknown wallet id",
+  "targetEnv": "CI",
+  "status": "passed",
+  "retry": 0,
+  "duration": 85,
+  "buildId": "30076849775",
+  "project": "bvnk"
+}
