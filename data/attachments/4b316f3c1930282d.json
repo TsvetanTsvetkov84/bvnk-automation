@@ -1,0 +1,53 @@
+{
+  "id": 838,
+  "description": "ETH Wallet #43897",
+  "currency": {
+    "id": 305,
+    "code": "ETH",
+    "fiat": false,
+    "icon": "https://coindirect-filestore.s3.amazonaws.com/com.coindirect.core.finance.Currency/7064b059-c058-4141-9bad-70b3febf4704.png",
+    "name": "Ethereum",
+    "withdrawalParameters": [],
+    "options": {
+      "address": "https://etherscan.io/address/{{address}}",
+      "explorer": "https://etherscan.io/",
+      "transaction": "https://etherscan.io/tx/{{hash}}",
+      "confirmations": 12
+    },
+    "withdrawalFee": "0",
+    "depositFee": "0",
+    "supportsDeposits": false,
+    "supportsWithdrawals": false,
+    "quantityPrecision": 8,
+    "pricePrecision": 8,
+    "protocols": [
+      {
+        "code": "ETH",
+        "network": "Ethereum",
+        "networkCode": "ETHEREUM"
+      }
+    ]
+  },
+  "supportsWithdrawals": false,
+  "supportsDeposits": false,
+  "custodianWallet": null,
+  "supportsThirdParty": false,
+  "supportsInternalBvnkNetworkTransfers": false,
+  "partner": null,
+  "isEmoney": false,
+  "supportedTransferDestinations": [],
+  "protocol": "ETH",
+  "address": "simulated-address-209758399",
+  "lookup": null,
+  "balance": "3.70000",
+  "available": "3.70000",
+  "withdrawalFee": "0.000005",
+  "depositFee": "0",
+  "convertedAvailable": "10000",
+  "alternatives": [],
+  "approxAvailable": "3.70000",
+  "approxBalance": "3.70000",
+  "approxConvertedAvailable": "10000",
+  "lsid": "acc:60847035908222:cQ91e:0",
+  "status": "ACTIVE"
+}

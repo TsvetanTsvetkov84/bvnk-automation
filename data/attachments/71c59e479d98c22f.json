@@ -1,0 +1,53 @@
+{
+  "id": 842,
+  "description": "TRX Wallet #28610",
+  "currency": {
+    "id": 440,
+    "code": "TRX",
+    "fiat": false,
+    "icon": "https://coindirect-filestore.s3.amazonaws.com/com.coindirect.core.finance.Currency/9f59bbea-a0f5-42a6-b594-44bd235b8d39.png",
+    "name": "Tronix",
+    "withdrawalParameters": [],
+    "options": {
+      "address": "https://trx.tokenview.com/en/address/{{address}}",
+      "explorer": "https://trx.tokenview.com/",
+      "transaction": "https://trx.tokenview.com/en/tx/{{hash}}",
+      "confirmations": 12
+    },
+    "withdrawalFee": "0",
+    "depositFee": "0",
+    "supportsDeposits": false,
+    "supportsWithdrawals": false,
+    "quantityPrecision": 6,
+    "pricePrecision": 8,
+    "protocols": [
+      {
+        "code": "TRX",
+        "network": "Tron",
+        "networkCode": "TRON"
+      }
+    ]
+  },
+  "supportsWithdrawals": false,
+  "supportsDeposits": false,
+  "custodianWallet": null,
+  "supportsThirdParty": false,
+  "supportsInternalBvnkNetworkTransfers": false,
+  "partner": null,
+  "isEmoney": false,
+  "supportedTransferDestinations": [],
+  "protocol": "TRX",
+  "address": "simulated-address-493914408",
+  "lookup": null,
+  "balance": "46500.00",
+  "available": "46500.00",
+  "withdrawalFee": "0.000005",
+  "depositFee": "0",
+  "convertedAvailable": "10000",
+  "alternatives": [],
+  "approxAvailable": "46500.00",
+  "approxBalance": "46500.00",
+  "approxConvertedAvailable": "10000",
+  "lsid": "acc:49424784759824:cQ57e:0",
+  "status": "ACTIVE"
+}
