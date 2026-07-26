@@ -1,0 +1,11 @@
+{
+  "jiraId": "unknown",
+  "priority": "unknown",
+  "testName": "a fresh account provides funded wallets for all trade currencies",
+  "targetEnv": "CI",
+  "status": "passed",
+  "retry": 0,
+  "duration": 436,
+  "buildId": "30190285323",
+  "project": "bvnk"
+}
