@@ -1,0 +1,11 @@
+{
+  "jiraId": "unknown",
+  "priority": "unknown",
+  "testName": "rejects a malformed quote uuid (422 uuid parsing error)",
+  "targetEnv": "CI",
+  "status": "timedOut",
+  "retry": 0,
+  "duration": 30005,
+  "buildId": "30242816061",
+  "project": "bvnk"
+}

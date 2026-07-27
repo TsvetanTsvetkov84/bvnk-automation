@@ -1,0 +1,11 @@
+{
+  "jiraId": "unknown",
+  "priority": "unknown",
+  "testName": "created quotes appear in the quote list",
+  "targetEnv": "CI",
+  "status": "failed",
+  "retry": 0,
+  "duration": 1,
+  "buildId": "30242816061",
+  "project": "bvnk"
+}

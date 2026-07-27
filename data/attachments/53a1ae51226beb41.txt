@@ -1,0 +1,22 @@
+AI failure analysis failed (non-blocking): SyntaxError: Unexpected token '`', "```json
+{
+"... is not valid JSON
+    at JSON.parse (<anonymous>)
+    at parseAnalysis (file:///home/runner/work/bvnk-automation/bvnk-automation/core/ai/automatic-failure-review/parse-analysis.ts:15:29)
+    at analyzeFailure (file:///home/runner/work/bvnk-automation/bvnk-automation/core/ai/automatic-failure-review/failure-analyzer.ts:43:10)
+    at processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at runAiFailureAnalysis (file:///home/runner/work/bvnk-automation/bvnk-automation/core/reporting/test-results/test-result-reporter.ts:73:22)
+    at Object.base.extend._report.auto [as fn] (file:///home/runner/work/bvnk-automation/bvnk-automation/src/api/fixtures/api.fixture.ts:108:13)
+    at /home/runner/work/bvnk-automation/bvnk-automation/node_modules/playwright/lib/worker/fixtureRunner.js:101:9
+    at Fixture._teardownInternal (/home/runner/work/bvnk-automation/bvnk-automation/node_modules/playwright/lib/worker/fixtureRunner.js:140:7)
+    at /home/runner/work/bvnk-automation/bvnk-automation/node_modules/playwright/lib/worker/testInfo.js:320:11
+    at TimeoutManager.withRunnable (/home/runner/work/bvnk-automation/bvnk-automation/node_modules/playwright/lib/worker/timeoutManager.js:67:14)
+    at TestInfoImpl._runWithTimeout (/home/runner/work/bvnk-automation/bvnk-automation/node_modules/playwright/lib/worker/testInfo.js:318:7)
+    at TestInfoImpl._runAsStep (/home/runner/work/bvnk-automation/bvnk-automation/node_modules/playwright/lib/worker/testInfo.js:309:7)
+    at Fixture.teardown (/home/runner/work/bvnk-automation/bvnk-automation/node_modules/playwright/lib/worker/fixtureRunner.js:120:11)
+    at FixtureRunner.teardownScope (/home/runner/work/bvnk-automation/bvnk-automation/node_modules/playwright/lib/worker/fixtureRunner.js:187:9)
+    at /home/runner/work/bvnk-automation/bvnk-automation/node_modules/playwright/lib/worker/workerMain.js:346:9
+    at TestInfoImpl._runAsStep (/home/runner/work/bvnk-automation/bvnk-automation/node_modules/playwright/lib/worker/testInfo.js:309:7)
+    at WorkerMain._runTest (/home/runner/work/bvnk-automation/bvnk-automation/node_modules/playwright/lib/worker/workerMain.js:331:5)
+    at WorkerMain.runTestGroup (/home/runner/work/bvnk-automation/bvnk-automation/node_modules/playwright/lib/worker/workerMain.js:196:11)
+    at process.<anonymous> (/home/runner/work/bvnk-automation/bvnk-automation/node_modules/playwright/lib/common/process.js:72:22)
