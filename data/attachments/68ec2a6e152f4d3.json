@@ -1,0 +1,11 @@
+{
+  "jiraId": "unknown",
+  "priority": "unknown",
+  "testName": "authenticated /echo returns token expiry and echoes the request body",
+  "targetEnv": "CI",
+  "status": "passed",
+  "retry": 1,
+  "duration": 111,
+  "buildId": "30608883790",
+  "project": "bvnk"
+}
