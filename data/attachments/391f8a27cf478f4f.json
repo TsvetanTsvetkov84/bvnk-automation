@@ -1,0 +1,11 @@
+{
+  "jiraId": "unknown",
+  "priority": "unknown",
+  "testName": "get wallet by id returns the same wallet as the list",
+  "targetEnv": "CI",
+  "status": "passed",
+  "retry": 0,
+  "duration": 25,
+  "buildId": "30979015291",
+  "project": "bvnk"
+}
