@@ -1,0 +1,11 @@
+{
+  "jiraId": "unknown",
+  "priority": "unknown",
+  "testName": "converts 420 TRX to USDT and settles balances correctly",
+  "targetEnv": "CI",
+  "status": "passed",
+  "retry": 0,
+  "duration": 5203,
+  "buildId": "31238808812",
+  "project": "bvnk"
+}
