@@ -1,0 +1,17 @@
+[
+  {
+    "id": 10,
+    "currency": "ETH",
+    "balance": "2.70000000"
+  },
+  {
+    "id": 11,
+    "currency": "TRX",
+    "balance": "59228.456757"
+  },
+  {
+    "id": 12,
+    "currency": "USDT",
+    "balance": "10400.00"
+  }
+]
