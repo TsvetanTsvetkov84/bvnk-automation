@@ -1,0 +1,11 @@
+{
+  "jiraId": "unknown",
+  "priority": "unknown",
+  "testName": "negative amount is accepted (201) — based on ASSUMPTION, see Findings",
+  "targetEnv": "CI",
+  "status": "passed",
+  "retry": 0,
+  "duration": 203,
+  "buildId": "32213155516",
+  "project": "bvnk"
+}
