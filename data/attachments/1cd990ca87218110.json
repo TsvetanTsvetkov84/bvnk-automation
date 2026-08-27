@@ -1,0 +1,11 @@
+{
+  "jiraId": "unknown",
+  "priority": "unknown",
+  "testName": "returns 404 for an unknown quote uuid on get and accept",
+  "targetEnv": "CI",
+  "status": "passed",
+  "retry": 0,
+  "duration": 33,
+  "buildId": "33078523248",
+  "project": "bvnk"
+}
