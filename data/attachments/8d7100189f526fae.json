@@ -1,0 +1,11 @@
+{
+  "jiraId": "unknown",
+  "priority": "unknown",
+  "testName": "rejects a currency that does not match the source wallet (400)",
+  "targetEnv": "CI",
+  "status": "passed",
+  "retry": 0,
+  "duration": 183,
+  "buildId": "33729866895",
+  "project": "bvnk"
+}
