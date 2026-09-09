@@ -1,0 +1,73 @@
+{
+  "id": 20,
+  "from": "TRX",
+  "to": "USDT",
+  "amountIn": "420.000000",
+  "amountDue": "0",
+  "amountOut": "95.526927",
+  "price": "0.22746781",
+  "quoteStatus": "PAYMENT_OUT_PROCESSED",
+  "paymentStatus": "SUCCESS",
+  "acceptanceExpiryDate": 1788940493,
+  "acceptanceDate": 1788940478,
+  "paymentExpiryDate": 1788940833,
+  "paymentReceiptDate": null,
+  "payInLegs": [],
+  "payInMethod": {
+    "id": 5,
+    "code": "wallet",
+    "settlementCurrency": "TRX",
+    "requestedCurrency": null,
+    "estimatedExchangeRate": null,
+    "accountMethods": []
+  },
+  "payOutMethod": {
+    "id": 3,
+    "code": "wallet",
+    "currency": "USDT",
+    "accountMethods": [
+      {
+        "id": 491,
+        "display": null
+      },
+      {
+        "id": 660,
+        "display": null
+      },
+      {
+        "id": 1261,
+        "display": null
+      }
+    ]
+  },
+  "uuid": "94e4f50e-4083-45e1-a960-799d19cb441e",
+  "payOutInstruction": null,
+  "payInInstruction": null,
+  "usePayInMethod": {
+    "id": 41,
+    "display": null
+  },
+  "usePayOutMethod": {
+    "id": 42,
+    "display": null
+  },
+  "fee": "0.042",
+  "processingFee": "0",
+  "type": "FIXED",
+  "netPrice": "0.22746781",
+  "grossPrice": "0.22746781",
+  "amountInGross": "420.000000",
+  "amountInNet": "420.000000",
+  "fees": {
+    "percentage": {
+      "service": "0.01",
+      "processing": "0"
+    },
+    "value": {
+      "service": "0.042",
+      "processing": "0"
+    }
+  },
+  "dateCreated": 1788940473,
+  "lastUpdated": 1788940478
+}
