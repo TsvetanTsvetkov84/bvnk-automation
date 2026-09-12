@@ -1,0 +1,11 @@
+{
+  "jiraId": "unknown",
+  "priority": "unknown",
+  "testName": "converts 987 TRX to ETH and settles balances correctly",
+  "targetEnv": "CI",
+  "status": "failed",
+  "retry": 1,
+  "duration": 15,
+  "buildId": "34681359189",
+  "project": "bvnk"
+}

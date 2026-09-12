@@ -1,0 +1,11 @@
+{
+  "jiraId": "unknown",
+  "priority": "unknown",
+  "testName": "rejects a quote exceeding the available balance (412)",
+  "targetEnv": "CI",
+  "status": "failed",
+  "retry": 1,
+  "duration": 2,
+  "buildId": "34681359189",
+  "project": "bvnk"
+}

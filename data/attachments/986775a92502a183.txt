@@ -1,0 +1,1 @@
+⚠️ Test-result persistence disabled: DB_* env vars not configured (set DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME to enable)
